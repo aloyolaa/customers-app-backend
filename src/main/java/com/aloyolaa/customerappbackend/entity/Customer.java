@@ -31,5 +31,10 @@ public class Customer implements Serializable {
     private LocalDate birthDate;
 
     @Column(name = "create_date")
-    private LocalDateTime createDate = LocalDateTime.now();
+    private LocalDateTime createDate;
+
+    @PrePersist
+    private void prePersist() {
+        this.createDate = LocalDateTime.now();
+    }
 }

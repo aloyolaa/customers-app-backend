@@ -34,7 +34,7 @@ public class ExceptionController {
         });
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Fields do not meet the requirements");
         problemDetail.setTitle("Invalid fields");
-        problemDetail.setType(URI.create("http://localhost:8080/errors/invalid-fields"));
+        problemDetail.setType(URI.create("http://localhost:8080/api/errors/invalid-fields"));
         problemDetail.setProperty("timestamp", Instant.now());
         problemDetail.setProperty("errors", errors);
         return problemDetail;

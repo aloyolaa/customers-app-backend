@@ -1,9 +1,12 @@
 package com.aloyolaa.customerappbackend.service;
 
 import com.aloyolaa.customerappbackend.entity.Customer;
+import com.aloyolaa.customerappbackend.exception.DataAccessExceptionImpl;
+import com.aloyolaa.customerappbackend.exception.EntityNotFound;
 import com.aloyolaa.customerappbackend.repository.CustomerRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,40 +20,60 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional(readOnly = true)
     public List<Customer> findAll() {
-        return customerRepository.findAll();
+        try {
+            return customerRepository.findAll();
+        } catch (DataAccessException e) {
+            throw new DataAccessExceptionImpl("Data access error", e);
+        }
     }
 
     @Override
     @Transactional(readOnly = true)
     public Customer findById(Long id) {
-        return customerRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        try {
+            return customerRepository.findById(id).orElseThrow(() -> new EntityNotFound(id));
+        } catch (DataAccessException e) {
+            throw new DataAccessExceptionImpl("Data access error", e);
+        }
     }
 
     @Override
     @Transactional
     public Customer save(Customer customer) {
-        return customerRepository.save(customer);
+        try {
+            return customerRepository.save(customer);
+        } catch (DataAccessException e) {
+            throw new DataIntegrityViolationException("Data saving error", e);
+        }
     }
 
     @Override
     @Transactional
     public Customer update(Long id, Customer customer) {
-        Customer customerById = this.findById(id);
-        customerById.setFirstName(customer.getFirstName());
-        customerById.setLastName(customer.getLastName());
-        customerById.setEmail(customer.getEmail());
-        customerById.setBirthDate(customer.getBirthDate());
-        return this.save(customerById);
+        Customer customerById = customerRepository.findById(id).orElseThrow(() -> new EntityNotFound(id));
+        try {
+            customerById.setFirstName(customer.getFirstName());
+            customerById.setLastName(customer.getLastName());
+            customerById.setEmail(customer.getEmail());
+            customerById.setBirthDate(customer.getBirthDate());
+            return customerRepository.save(customerById);
+        } catch (DataAccessException e) {
+            throw new DataIntegrityViolationException("Data updating error", e);
+        }
     }
 
     @Override
     @Transactional
     public Boolean delete(Long id) {
-        if (customerRepository.existsById(id)) {
-            customerRepository.deleteById(id);
-            return true;
-        } else {
-            throw new EntityNotFoundException();
+        try {
+            if (customerRepository.existsById(id)) {
+                customerRepository.deleteById(id);
+                return true;
+            } else {
+                throw new EntityNotFound(id);
+            }
+        } catch (DataAccessException e) {
+            throw new DataIntegrityViolationException("Data deleted error", e);
         }
     }
 }

@@ -2,6 +2,7 @@ package com.aloyolaa.customerappbackend.controller;
 
 import com.aloyolaa.customerappbackend.entity.Customer;
 import com.aloyolaa.customerappbackend.service.CustomerService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,12 +28,12 @@ public class CustomerController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<Customer> save(@RequestBody Customer customer) {
+    public ResponseEntity<Customer> save(@Valid @RequestBody Customer customer) {
         return new ResponseEntity<>(customerService.save(customer), HttpStatus.CREATED);
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Customer> update(@PathVariable Long id, @RequestBody Customer customer) {
+    public ResponseEntity<Customer> update(@Valid @PathVariable Long id, @RequestBody Customer customer) {
         return new ResponseEntity<>(customerService.update(id, customer), HttpStatus.CREATED);
     }
 

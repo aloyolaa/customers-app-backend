@@ -7,6 +7,8 @@ import com.aloyolaa.customerappbackend.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +34,16 @@ public class CustomerServiceImpl implements CustomerService {
     public Customer findById(Long id) {
         try {
             return customerRepository.findById(id).orElseThrow(() -> new EntityNotFound(id));
+        } catch (DataAccessException e) {
+            throw new DataAccessExceptionImpl("Data access error", e);
+        }
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<Customer> pagination(Pageable pageable) {
+        try {
+            return customerRepository.findAll(pageable);
         } catch (DataAccessException e) {
             throw new DataAccessExceptionImpl("Data access error", e);
         }

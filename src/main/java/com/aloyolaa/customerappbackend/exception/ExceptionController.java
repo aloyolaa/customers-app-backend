@@ -57,4 +57,13 @@ public class ExceptionController {
         problemDetail.setProperty("timestamp", Instant.now());
         return problemDetail;
     }
+
+    @ExceptionHandler(UploadFileException.class)
+    public ProblemDetail uploadFileException(UploadFileException e) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        problemDetail.setTitle(e.getMessage());
+        problemDetail.setType(URI.create("http://localhost:8080/api/errors/upload"));
+        problemDetail.setProperty("timestamp", Instant.now());
+        return problemDetail;
+    }
 }

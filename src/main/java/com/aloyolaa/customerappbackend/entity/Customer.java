@@ -44,6 +44,9 @@ public class Customer implements Serializable {
     @Column(name = "create_date")
     private LocalDateTime createDate;
 
+    @Column(name = "photo")
+    private String photo;
+
     @PrePersist
     private void prePersist() {
         this.createDate = LocalDateTime.now();

@@ -68,6 +68,7 @@ public class CustomerServiceImpl implements CustomerService {
             customerById.setLastName(customer.getLastName());
             customerById.setEmail(customer.getEmail());
             customerById.setBirthDate(customer.getBirthDate());
+            customerById.setRegion(customer.getRegion());
             return customerRepository.save(customerById);
         } catch (DataAccessException e) {
             throw new DataIntegrityViolationException("Data updating error", e);

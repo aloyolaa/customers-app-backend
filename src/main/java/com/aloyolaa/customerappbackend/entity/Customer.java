@@ -1,5 +1,6 @@
 package com.aloyolaa.customerappbackend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
@@ -46,6 +47,12 @@ public class Customer implements Serializable {
 
     @Column(name = "photo")
     private String photo;
+
+    @NotNull(message = "{NotNull.customer.region}")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "region_id", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private Region region;
 
     @PrePersist
     private void prePersist() {

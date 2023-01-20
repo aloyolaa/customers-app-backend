@@ -27,3 +27,13 @@ insert into customers (first_name, last_name, email, birth_date, create_date, re
 insert into customers (first_name, last_name, email, birth_date, create_date, region_id) values ('Griffith', 'Adamou', 'gadamouh@census.gov', '2007-07-09', '2023-01-08 13:29:05', 2);
 insert into customers (first_name, last_name, email, birth_date, create_date, region_id) values ('Morton', 'Gaven', 'mgaveni@netvibes.com', '1977-06-21', '2022-03-03 06:06:28', 3);
 insert into customers (first_name, last_name, email, birth_date, create_date, region_id) values ('Ester', 'McIlvenna', 'emcilvennaj@seattletimes.com', '1993-10-19', '2021-04-22 04:46:36', 4);
+
+insert into users (name, password, enabled) values ('admin', '$2a$10$cZKBLdDcN5wsaAf8XwirGuNo2u29axOAsTdcSyTu8mTWFfzU2HzVq', true);
+insert into users (name, password, enabled) values ('aloyolaa', '$2a$10$nOWjazt4BC60awPXfgyLl.y7QyzqiY4FKtM7W5TZo.tZDX.Qtc7n6', true);
+
+insert into authorities (name) values ('ROLE_ADMIN');
+insert into authorities (name) values ('ROLE_USER');
+
+insert into users_authorities (user_id, authority_id) values(1, 1);
+insert into users_authorities (user_id, authority_id) values(1, 2);
+insert into users_authorities (user_id, authority_id) values(2, 2);

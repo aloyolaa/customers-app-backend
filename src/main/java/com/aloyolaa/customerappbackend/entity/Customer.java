@@ -7,8 +7,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -43,7 +45,7 @@ public class Customer implements Serializable {
     private LocalDate birthDate;
 
     @Column(name = "create_date")
-    private LocalDateTime createDate;
+    private Instant createDate;
 
     @Column(name = "photo")
     private String photo;
@@ -54,8 +56,12 @@ public class Customer implements Serializable {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Region region;
 
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties(value = {"customer", "hibernateLazyInitializer", "handler"}, allowSetters = true)
+    private Set<Invoice> invoices = new LinkedHashSet<>();
+
     @PrePersist
     private void prePersist() {
-        this.createDate = LocalDateTime.now();
+        this.createDate = Instant.now();
     }
 }
